@@ -1,5 +1,4 @@
-const char* home_ssid = "TP-Link_3290";
-const char* home_password = "11789697";
+
 
 #include <ESP8266WiFi.h>
 #include <ESPAsyncTCP.h>
@@ -7,6 +6,8 @@ const char* home_password = "11789697";
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
+const char* home_ssid = "qwerty";
+const char* home_password = "12345678";
 
 const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 3600*3;
