@@ -6,8 +6,8 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
-const char* home_ssid = "qwerty";
-const char* home_password = "12345678";
+const char* home_ssid = "SIID";
+const char* home_password = "PASS";
 
 const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 3600*3;
@@ -22,17 +22,18 @@ int sunriseTime = 360;
 int sunsetTime = 1320;
 int brightness = 100;
 
-const int UF_LED = D5; // Pin for the LED
-const int RED_LED = D5; // Pin for the LED
-const int GREEN_LED = D5; // Pin for the LED
+const int UF_LED = D5;
+const int RED_LED = D6;
+const int GREEN_LED = D7;
 
 
 void setup() {
   Serial.begin(115200);
-  pinMode(LED, OUTPUT);
-  pinMode(LED, OUTPUT);
-  analogWrite(D6, 255);
-  analogWrite(D7, 0);
+  pinMode(UF_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  analogWrite(RED_LED, 255);
+  analogWrite(GREEN_LED, 0);
   WiFi.begin(home_ssid, home_password);
   int check = 0;
   while (WiFi.status() != WL_CONNECTED && check < 10) {
@@ -43,14 +44,14 @@ void setup() {
   if(WiFi.status() == WL_CONNECTED)
   {
     Serial.println("Connected to WiFi");
-    analogWrite(D6, 0);
-    analogWrite(D7, 255);
+    analogWrite(RED_LED, 0);
+    analogWrite(GREEN_LED, 255);
   }
   else
   {
     Serial.println("Failed to connect to Wi-Fi");
-    analogWrite(D6, 255);
-    analogWrite(D7, 0);
+    analogWrite(RED_LED, 255);
+    analogWrite(GREEN_LED, 0);
   }
 
 
@@ -59,7 +60,7 @@ void setup() {
   timeClient.begin();
   timeClient.update();
 
-  pinMode(LED, OUTPUT); // Assuming an LED is connected to pin D5
+  pinMode(UF_LED, OUTPUT); // Assuming an LED is connected to pin D5
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest* request){
     String html = "<html>";
@@ -101,11 +102,11 @@ void loop() {
   int currentTime = getTimeInMin(timeClient.getFormattedTime());
 
   if (currentTime >= sunriseTime && currentTime <= sunsetTime) {
-    analogWrite(LED, brightness * 255 / 100);
+    analogWrite(UF_LED, brightness * 255 / 100);
   } 
   else 
   {
-    analogWrite(LED, 0);
+    analogWrite(UF_LED, 0);
   }
 
 
@@ -138,13 +139,13 @@ void checkWiFiConnection() {
   if (WiFi.status() == WL_CONNECTED) 
   {
     //Serial.println("Connected to Wi-Fi");
-    analogWrite(D6, 0);
-    analogWrite(D7, 255);
+    analogWrite(RED_LED, 0);
+    analogWrite(GREEN_LED, 255);
   } else 
   {
     Serial.println("Failed to connect to Wi-Fi");
-    analogWrite(D6, 255);
-    analogWrite(D7, 0);
+    analogWrite(RED_LED, 255);
+    analogWrite(GREEN_LED, 0);
     while (WiFi.status() != WL_CONNECTED && check < 10) {
       delay(1000);
       Serial.println("Connecting to WiFi...");
